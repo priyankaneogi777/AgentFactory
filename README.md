@@ -1,4 +1,4 @@
-# 🏭 AgentFactory
+# AgentFactory
 
 > **Autonomous AI Agent Builder, Registry & Marketplace powered by Model Context Protocol (MCP) and LangGraph.**
 
@@ -12,7 +12,7 @@ AgentFactory allows developers and workspace members to register standardized **
 
 ---
 
-## 🌟 Key Platform Features
+## Key Platform Features
 
 - **Prompt-Driven Agent Builder**: Create fully functional AI agents with custom system prompts and instructions—zero manual graph coding required.
 - **Universal MCP Registry**: Connect any Model Context Protocol tool server (GitHub, Slack, GitLab, Postgres, Jira, Tavily) via stdio or Server-Sent Events (SSE).
@@ -26,7 +26,7 @@ AgentFactory allows developers and workspace members to register standardized **
 
 ---
 
-## 🏗️ End-to-End System Workflow
+## End-to-End System Workflow
 
 ```mermaid
 flowchart TD
@@ -41,59 +41,59 @@ flowchart TD
     classDef marketStyle fill:#f0fdf4,stroke:#059669,stroke-width:3px,color:#064e3b,font-weight:bold
 
     %% 1. ENTRY & AUTH
-    S1(["👤 1. User or Admin visits Platform"]):::startStyle
-    S2["🔐 2. Enter Email & Password (LoginPage.tsx)<br/>• Submits to FastAPI /auth/login"]:::authStyle
-    S3{"🔍 3. Database Check (bcrypt & is_admin)<br/>Role Identification"}:::authStyle
+    S1(["1. User or Admin visits Platform"]):::startStyle
+    S2["2. Enter Email and Password (LoginPage.tsx)<br/>• Submits to FastAPI /auth/login"]:::authStyle
+    S3{"3. Database Check (bcrypt and is_admin)<br/>Role Identification"}:::authStyle
 
     S1 --> S2
     S2 --> S3
 
     %% 2. ROLE BRANCHING
-    S3 -->|is_admin == false| U1["📋 4A. Lands on MCP Registry (MCPRegistry.tsx)<br/>• Views ONLY Admin-approved & published servers"]:::userStyle
-    S3 -->|is_admin == true| A1["👑 4B. Admin Identified (AdminReview.tsx)<br/>• Unlocks '+ Register MCP Server' & Portal"]:::adminStyle
+    S3 -->|is_admin == false| U1["4A. Lands on MCP Registry (MCPRegistry.tsx)<br/>• Views ONLY Admin-approved & published servers"]:::userStyle
+    S3 -->|is_admin == true| A1["4B. Admin Identified (AdminReview.tsx)<br/>• Unlocks '+ Register MCP Server' & Portal"]:::adminStyle
 
     %% 3. USER WORKFLOW
-    U1 --> U2{"❓ Tokens connected?"}:::userStyle
-    U2 -->|No / First time| U3["🔑 5A. Connections Page (Connections.tsx)<br/>• Connects PATs (GitHub, Slack, GitLab)<br/>• Live API test probe validates keys<br/>• Tokens ENCRYPTED & HIDDEN in UI"]:::userStyle
-    U2 -->|Yes| U4["🛠️ 6A. Agent Builder Page (AgentBuilder.tsx)<br/>• Inputs Agent Name & System Prompt<br/>• Selects required MCP servers/tools<br/>• DESELECTS unneeded tools"]:::userStyle
+    U1 --> U2{"Tokens connected?"}:::userStyle
+    U2 -->|No / First time| U3["5A. Connections Page (Connections.tsx)<br/>• Connects PATs (GitHub, Slack, GitLab)<br/>• Live API test probe validates keys<br/>• Tokens ENCRYPTED & HIDDEN in UI"]:::userStyle
+    U2 -->|Yes| U4["6A. Agent Builder Page (AgentBuilder.tsx)<br/>• Inputs Agent Name & System Prompt<br/>• Selects required MCP servers/tools<br/>• DESELECTS unneeded tools"]:::userStyle
     U3 --> U4
 
-    U4 --> U5{"🔍 All tokens active<br/>for selected tools?"}:::userStyle
-    U5 -->|Missing Tokens| U6["⏸️ 7A. INTERRUPT GATE<br/>• Workflow paused: prompts for token<br/>• User inputs PAT & validated live<br/>▶️ RESUMES automatically!"]:::pauseStyle
-    U6 --> U7["💾 8A. Agent Created (POST /agents)<br/>• Saved to DB under owner_id<br/>• Appears in My Agents Page"]:::userStyle
+    U4 --> U5{"All tokens active<br/>for selected tools?"}:::userStyle
+    U5 -->|Missing Tokens| U6["7A. INTERRUPT GATE<br/>• Workflow paused: prompts for token<br/>• User inputs PAT & validated live<br/>RESUMES automatically!"]:::pauseStyle
+    U6 --> U7["8A. Agent Created (POST /agents)<br/>• Saved to DB under owner_id<br/>• Appears in My Agents Page"]:::userStyle
     U5 -->|All Active| U7
 
-    U7 --> U8["📊 9A. My Agents Overview Tab (AgentDetail.tsx)<br/>• Renders visual backend flowchart<br/>• Shows ReAct loop & MCP tool bindings"]:::userStyle
-    U8 --> U9["🧪 10A. Playground Testing (Playground.tsx)<br/>• Tests prompts & use cases with chat<br/>• Backend injects PAT JIT (zero LLM leaks)<br/>• Human-in-the-Loop for write actions"]:::userStyle
-    U9 --> U10["📈 11A. Automated Scoring Engine (scoring.py)<br/>• Evaluates: Tool count, Prompt length,<br/>Reliability & Test execution history<br/>• Computes Score (0-100) & Grade (A-F)"]:::userStyle
-    U10 --> U11["🚀 12A. User Submits for Publishing<br/>• POST /marketplace/publish<br/>• LangGraph calls interrupt()<br/>• State paused durably in PostgreSQL"]:::userStyle
+    U7 --> U8["9A. My Agents Overview Tab (AgentDetail.tsx)<br/>• Renders visual backend flowchart<br/>• Shows ReAct loop & MCP tool bindings"]:::userStyle
+    U8 --> U9["10A. Playground Testing (Playground.tsx)<br/>• Tests prompts & use cases with chat<br/>• Backend injects PAT JIT (zero LLM leaks)<br/>• Human-in-the-Loop for write actions"]:::userStyle
+    U9 --> U10["11A. Automated Scoring Engine (scoring.py)<br/>• Evaluates: Tool count, Prompt length,<br/>Reliability & Test execution history<br/>• Computes Score (0-100) & Grade (A-F)"]:::userStyle
+    U10 --> U11["12A. User Submits for Publishing<br/>• POST /marketplace/publish<br/>• LangGraph calls interrupt()<br/>• State paused durably in PostgreSQL"]:::userStyle
 
     %% 4. ADMIN WORKFLOW
-    A1 --> A2["➕ 5B. Admin Registers New MCP Server<br/>• Inputs Name, SSE/stdio URL, provider"]:::adminStyle
-    A2 --> A3["🔬 6B. Test Probe with Admin's Own PAT<br/>• Admin provides personal PAT token<br/>• Live handshake tests tool introspection"]:::adminStyle
-    A3 --> A4["✅ 7B. Server Approved & Published<br/>• Commits to mcp_servers & mcp_tools<br/>• Instantly visible on MCP Registry!"]:::successStyle
+    A1 --> A2["5B. Admin Registers New MCP Server<br/>• Inputs Name, SSE/stdio URL, provider"]:::adminStyle
+    A2 --> A3["6B. Test Probe with Admin PAT<br/>• Admin provides personal PAT token<br/>• Live handshake tests tool introspection"]:::adminStyle
+    A3 --> A4["7B. Server Approved and Published<br/>• Commits to mcp_servers & mcp_tools<br/>• Instantly visible on MCP Registry!"]:::successStyle
     A4 -.->|Now available in catalog| U1
 
     %% 5. ADMIN REVIEW & GOVERNANCE GATE
-    U11 --> R1["📑 13. Admin Review Portal (AdminReview.tsx)<br/>• Inspects pending agent submission<br/>• Reviews prompt, tool bindings & score"]:::adminStyle
+    U11 --> R1["13. Admin Review Portal (AdminReview.tsx)<br/>• Inspects pending agent submission<br/>• Reviews prompt, tool bindings & score"]:::adminStyle
     A1 --> R1
     
-    R1 --> R2{"⚖️ 14. Score Evaluation Gate<br/>Does Score >= 70?"}:::gateStyle
+    R1 --> R2{"14. Score Evaluation Gate<br/>Does Score >= 70?"}:::gateStyle
     
-    R2 -->|< 70: Fails Gate| R3["❌ 15A. REJECT AGENT<br/>• Resume LangGraph: Command(resume='rejected')<br/>• Sent back to user with feedback!"]:::gateStyle
+    R2 -->|< 70: Fails Gate| R3["15A. REJECT AGENT<br/>• Resume LangGraph: Command(resume='rejected')<br/>• Sent back to user with feedback!"]:::gateStyle
     R3 -.->|User refines prompt & tools| U4
 
-    R2 -->|>= 70: Passes Gate| R4["✅ 15B. APPROVE AGENT<br/>• Resume LangGraph: Command(resume='approved')<br/>• Status set to Published"]:::successStyle
+    R2 -->|>= 70: Passes Gate| R4["15B. APPROVE AGENT<br/>• Resume LangGraph: Command(resume='approved')<br/>• Status set to Published"]:::successStyle
 
     %% 6. COMMUNITY MARKETPLACE REUSE
-    R4 --> M1["🏪 16. Community Marketplace (/marketplace)<br/>• Visible to all workspace members<br/>• Trust Badge, Score, Grade & Tools"]:::marketStyle
+    R4 --> M1["16. Community Marketplace (/marketplace)<br/>• Visible to all workspace members<br/>• Trust Badge, Score, Grade & Tools"]:::marketStyle
     
-    M1 --> M2["⚡ 17. DIRECT AGENT REUSE (Zero Rebuilding!)<br/>• ANY USER can discover and use this agent directly<br/>• No need to build or configure again!<br/>• Runs with user's own connected PAT tokens"]:::marketStyle
+    M1 --> M2["17. DIRECT AGENT REUSE (Zero Rebuilding)<br/>• ANY USER can discover and use this agent directly<br/>• No need to build or configure again!<br/>• Runs with user's own connected PAT tokens"]:::marketStyle
 ```
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Layer | Technology | Purpose |
 |:---|:---|:---|
@@ -107,51 +107,51 @@ flowchart TD
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
-```
+```text
 AgentFactory/
-├── backend/
-│   ├── app/
-│   │   ├── main.py              # FastAPI application entrypoint & middleware
-│   │   ├── deps.py              # Auth & database dependency injection
-│   │   ├── routers/             # API routes
-│   │   │   ├── auth.py          # Login, signup, JWT issuance
-│   │   │   ├── mcp.py           # MCP server registration & catalog
-│   │   │   ├── connections.py   # User PAT credential vault & validation
-│   │   │   ├── agents.py        # Agent builder CRUD & runtime execution
-│   │   │   └── marketplace.py   # Publishing submission & admin reviews
-│   │   └── services/            # Core business logic
-│   │       ├── agent_builder.py # LangGraph ReAct constructor & JIT token injector
-│   │       ├── publish_graph.py # LangGraph approval state graph with interrupt()
-│   │       ├── scoring.py       # Automated scoring & grading engine (0-100)
-│   │       └── github_tools.py  # Live GitHub API tools (issues, PRs, commits)
-│   └── requirements.txt         # Backend Python dependencies
-├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── LoginPage.tsx    # Authentication & role routing
-│   │   │   ├── MCPRegistry.tsx  # Catalog of approved MCP servers
-│   │   │   ├── Connections.tsx  # Masked PAT credential connection
-│   │   │   ├── AgentBuilder.tsx # Prompt input, tool selection/deselection
-│   │   │   ├── MyAgents.tsx     # User's agent portfolio
-│   │   │   ├── AgentDetail.tsx  # Visual flowchart overview of backend execution
-│   │   │   ├── Playground.tsx   # Interactive chat & Human-in-the-Loop approvals
-│   │   │   ├── AdminReview.tsx  # Admin moderation & Score 70 threshold gate
-│   │   │   └── Marketplace.tsx  # Community marketplace & instant reuse
-│   │   └── services/api.ts      # Typed client API layer
-│   └── package.json
-├── docs/                        # Architecture diagrams & technical specifications
-│   ├── high-level-architecture.html # Standalone vertical interactive architecture
-│   ├── system-design-lld.html       # Full Low-Level Design document
-│   └── system-design-lld.md         # Companion markdown documentation
-└── supabase/
-    └── migrations/              # Database schemas & SQL tables
+|-- backend/
+|   |-- app/
+|   |   |-- main.py              # FastAPI application entrypoint & middleware
+|   |   |-- deps.py              # Auth & database dependency injection
+|   |   |-- routers/             # API routes
+|   |   |   |-- auth.py          # Login, signup, JWT issuance
+|   |   |   |-- mcp.py           # MCP server registration & catalog
+|   |   |   |-- connections.py   # User PAT credential vault & validation
+|   |   |   |-- agents.py        # Agent builder CRUD & runtime execution
+|   |   |   `-- marketplace.py   # Publishing submission & admin reviews
+|   |   `-- services/            # Core business logic
+|   |       |-- agent_builder.py # LangGraph ReAct constructor & JIT token injector
+|   |       |-- publish_graph.py # LangGraph approval state graph with interrupt()
+|   |       |-- scoring.py       # Automated scoring & grading engine (0-100)
+|   |       `-- github_tools.py  # Live GitHub API tools (issues, PRs, commits)
+|   `-- requirements.txt         # Backend Python dependencies
+|-- frontend/
+|   |-- src/
+|   |   |-- pages/
+|   |   |   |-- LoginPage.tsx    # Authentication & role routing
+|   |   |   |-- MCPRegistry.tsx  # Catalog of approved MCP servers
+|   |   |   |-- Connections.tsx  # Masked PAT credential connection
+|   |   |   |-- AgentBuilder.tsx # Prompt input, tool selection/deselection
+|   |   |   |-- MyAgents.tsx     # User's agent portfolio
+|   |   |   |-- AgentDetail.tsx  # Visual flowchart overview of backend execution
+|   |   |   |-- Playground.tsx   # Interactive chat & Human-in-the-Loop approvals
+|   |   |   |-- AdminReview.tsx  # Admin moderation & Score 70 threshold gate
+|   |   |   `-- Marketplace.tsx  # Community marketplace & instant reuse
+|   |   `-- services/api.ts      # Typed client API layer
+|   `-- package.json
+|-- docs/                        # Architecture diagrams & technical specifications
+|   |-- high-level-architecture.html # Standalone vertical interactive architecture
+|   |-- system-design-lld.html       # Full Low-Level Design document
+|   `-- system-design-lld.md         # Companion markdown documentation
+`-- supabase/
+    `-- migrations/              # Database schemas & SQL tables
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### Prerequisites
 - **Python**: 3.12 or higher
@@ -232,7 +232,7 @@ npm run dev
 
 ---
 
-## 📖 Viewing System Design & Architecture
+## Viewing System Design and Architecture
 
 Interactive visual architecture diagrams and low-level design specifications are included in the repository:
 
@@ -246,7 +246,7 @@ open docs/system-design-lld.html
 
 ---
 
-## 🔒 Security Architecture
+## Security Architecture
 
 1. **Vault Isolation**: External credentials (GitHub PATs, Slack Bot Tokens, GitLab Tokens) are never stored in browser state and are never passed to the LLM. The LLM only receives abstract tool signatures (e.g. `github_list_issues`). When executing, the backend intercepts the call and injects the user's encrypted token JIT.
 2. **Stateless JWT Gatekeeper**: API routes authenticate requests using signed `HS256` tokens. The `is_admin` claim governs platform administrative endpoints.
@@ -254,6 +254,6 @@ open docs/system-design-lld.html
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).
